@@ -9,21 +9,23 @@
 /* Begin PBXBuildFile section */
 		1111173D2B2754C100A5CC28 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1111173C2B2754C100A5CC28 /* AppDelegate.swift */; };
 		1111173F2B2754C100A5CC28 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1111173E2B2754C100A5CC28 /* SceneDelegate.swift */; };
-		111117412B2754C100A5CC28 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111117402B2754C100A5CC28 /* ViewController.swift */; };
+		111117412B2754C100A5CC28 /* ReminderListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111117402B2754C100A5CC28 /* ReminderListViewController.swift */; };
 		111117442B2754C100A5CC28 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 111117422B2754C100A5CC28 /* Main.storyboard */; };
 		111117462B2754C300A5CC28 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 111117452B2754C300A5CC28 /* Assets.xcassets */; };
 		111117492B2754C300A5CC28 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 111117472B2754C300A5CC28 /* LaunchScreen.storyboard */; };
+		111117522B2755ED00A5CC28 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111117512B2755ED00A5CC28 /* Reminder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		111117392B2754C100A5CC28 /* Today.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Today.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1111173C2B2754C100A5CC28 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1111173E2B2754C100A5CC28 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		111117402B2754C100A5CC28 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		111117402B2754C100A5CC28 /* ReminderListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderListViewController.swift; sourceTree = "<group>"; };
 		111117432B2754C100A5CC28 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		111117452B2754C300A5CC28 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		111117482B2754C300A5CC28 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1111174A2B2754C300A5CC28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		111117512B2755ED00A5CC28 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +58,24 @@
 		1111173B2B2754C100A5CC28 /* Today */ = {
 			isa = PBXGroup;
 			children = (
+				111117502B2755B300A5CC28 /* Models */,
 				1111173C2B2754C100A5CC28 /* AppDelegate.swift */,
 				1111173E2B2754C100A5CC28 /* SceneDelegate.swift */,
-				111117402B2754C100A5CC28 /* ViewController.swift */,
+				111117402B2754C100A5CC28 /* ReminderListViewController.swift */,
 				111117422B2754C100A5CC28 /* Main.storyboard */,
 				111117452B2754C300A5CC28 /* Assets.xcassets */,
 				111117472B2754C300A5CC28 /* LaunchScreen.storyboard */,
 				1111174A2B2754C300A5CC28 /* Info.plist */,
 			);
 			path = Today;
+			sourceTree = "<group>";
+		};
+		111117502B2755B300A5CC28 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				111117512B2755ED00A5CC28 /* Reminder.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,8 +149,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				111117412B2754C100A5CC28 /* ViewController.swift in Sources */,
+				111117412B2754C100A5CC28 /* ReminderListViewController.swift in Sources */,
 				1111173D2B2754C100A5CC28 /* AppDelegate.swift in Sources */,
+				111117522B2755ED00A5CC28 /* Reminder.swift in Sources */,
 				1111173F2B2754C100A5CC28 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
