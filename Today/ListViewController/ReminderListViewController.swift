@@ -9,12 +9,12 @@ import UIKit
 
 class ReminderListViewController: UICollectionViewController {
     
-// Diffable veri kaynağı için bir tür takma adı ekleyin.
-// Tür takma adları, daha anlamlı bir isme sahip mevcut bir türe atıfta bulunmak için yararlıdır.
-    typealias DataSource = UICollectionViewDiffableDataSource<Int, String>
-    
-// Diffable bir veri kaynağı anlık görüntüsü için bir tür takma adı ekleyin.
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, String>
+//// Diffable veri kaynağı için bir tür takma adı ekleyin.
+//// Tür takma adları, daha anlamlı bir isme sahip mevcut bir türe atıfta bulunmak için yararlıdır.
+//    typealias DataSource = UICollectionViewDiffableDataSource<Int, String>
+//    
+//// Diffable bir veri kaynağı anlık görüntüsü için bir tür takma adı ekleyin.
+//    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, String>
     
     // Bir DataSource'un paketini örtülü olarak açan bir dataSource özelliği ekleyin.
     /* Uyarı
@@ -35,27 +35,34 @@ class ReminderListViewController: UICollectionViewController {
         // Liste düzenini koleksiyon görünümü düzenine atayın.
         collectionView.collectionViewLayout = listLayout
         
+        /*
+         Reminder.swift, sondaki kapatmayı kaldırın ve yeni işlevinizi işleyici parametresi olarak iletin.
+         Reminder.swift tüm veri kaynağı davranışını çıkarmak, daha düzenli Swift dosyalarıyla sonuçlanır. Görünüm denetleyicisi davranışları bir dosyada, veri kaynağı davranışları başka bir
+         dosyadadır.
+         */
+        let cellRegistration = UICollectionView.CellRegistration(handler: cellRegistrationHandler)
+        
         // Yeni bir hücre kaydı oluşturun.
         // Hücre kaydı, bir hücrenin içeriğinin ve görünümünün nasıl yapılandırılacağını belirtir.
         
-        let cellRegistration = UICollectionView.CellRegistration {
-            (cell: UICollectionViewListCell, indexPath: IndexPath, itemIdentifier: String) in
-            
-            // Öğeye karşılık gelen hatırlatıcıyı alın.
-            let reminder = Reminder.sampleData[indexPath.item]
-            
-            // Hücrenin varsayılan içerik yapılandırmasını alın.
-            // defaultContentConfiguration() önceden tanımlanmış sistem stiliyle bir içerik yapılandırması oluşturur.
-            var contentConfiguration = cell.defaultContentConfiguration()
-            
-            // İçerik yapılandırma metnine hatırlatıcı.başlık atayın
-            // Liste, yapılandırma metnini bir hücrenin birincil metni olarak görüntüler.
-            
-            contentConfiguration.text = reminder.title
-            
-            // İçerik yapılandırmasını hücreye atayın.
-            cell.contentConfiguration = contentConfiguration
-        }
+//        let cellRegistration = UICollectionView.CellRegistration {
+//            (cell: UICollectionViewListCell, indexPath: IndexPath, itemIdentifier: String) in
+//            
+//            // Öğeye karşılık gelen hatırlatıcıyı alın.
+//            let reminder = Reminder.sampleData[indexPath.item]
+//            
+//            // Hücrenin varsayılan içerik yapılandırmasını alın.
+//            // defaultContentConfiguration() önceden tanımlanmış sistem stiliyle bir içerik yapılandırması oluşturur.
+//            var contentConfiguration = cell.defaultContentConfiguration()
+//            
+//            // İçerik yapılandırma metnine hatırlatıcı.başlık atayın
+//            // Liste, yapılandırma metnini bir hücrenin birincil metni olarak görüntüler.
+//            
+//            contentConfiguration.text = reminder.title
+//            
+//            // İçerik yapılandırmasını hücreye atayın.
+//            cell.contentConfiguration = contentConfiguration
+//        }
         
         // Yeni bir veri kaynağı oluşturun.
         //Başlatıcıda, bir koleksiyon görünümü için bir hücreyi yapılandıran ve döndüren bir kapatma iletirsiniz.
