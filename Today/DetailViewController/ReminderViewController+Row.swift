@@ -19,7 +19,7 @@ extension ReminderViewController {
         // Her durum için uygun bir SF Sembolü adı döndüren imageName adlı hesaplanmış bir özellik ekleyin.
         var imageName: String? {
             switch self {
-            case .date: return "calender.circle"
+            case .date: return "calendar.circle"
             case .notes: return "square.and.pencil"
             case .time: return "clock"
             default: return nil

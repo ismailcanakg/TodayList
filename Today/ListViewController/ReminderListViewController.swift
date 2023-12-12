@@ -150,6 +150,30 @@ class ReminderListViewController: UICollectionViewController {
 
     // ReminderListViewController.swift'te, gruplandırılmış görünüme sahip yeni bir liste yapılandırma değişkeni oluşturan listLayout() adında yeni bir işlev oluşturun.
     //UICollectionLayoutListConfigurationliste düzeninde bir bölüm oluşturur.
+    // ------------------------------------------------------
+    // CollectionView(_:shouldSelectItemAt:) işlevini geçersiz kılın ve false değerini döndürün.
+    // Kullanıcının dokunduğu öğeyi seçili olarak göstermiyorsunuz, bu nedenle false değerini döndürün. Bunun yerine söz konusu liste öğesinin ayrıntı görünümüne geçiş yapacaksınız.
+    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        // Bu dizin yolu ile ilişkili hatırlatıcının tanımlayıcısını alın ve sabit adlandırılmış bir id atayın.
+        // Bir indexPath'in item öğesinin bir Int olduğunu hatırlayın, böylece onu uygun hatırlatıcıyı almak için bir dizi dizini olarak kullanabilirsiniz.
+        let id = reminders[indexPath.item].id
+        // pushDetailViewForReminder(withId:) yöntemini çağırın.
+        // Bu yöntem, gezinme yığınına bir ayrıntı görünümü denetleyicisi ekleyerek bir ayrıntı görünümünün ekrana girmesine neden olur. Ayrıntı görünümü, sağlanan tanımlayıcı için hatırlatıcı ayrıntılarını görüntüler. Ve bir Geri düğmesi, gezinme çubuğunda öndeki öğe olarak otomatik olarak görünür.
+        pushDetailViewForReminder(widthId: id)
+            return false
+        }
+    
+    // ReminderListViewController.swift'te, hatırlatıcı tanımlayıcıyı kabul eden bir pushDetailViewForReminder(withId:) işlevi oluşturun.
+    func pushDetailViewForReminder(widthId id: Reminder.ID) {
+        // Modelin hatırlatıcı dizisinden tanımlayıcıyla eşleşen hatırlatıcıyı alın ve sabit bir adlandırılmış reminder atayın.
+        let reminder = reminder(withId: id)
+        // Önceki adımda aldığınız hatırlatıcıyı ayrıntı görünümü denetleyicisinin yeni bir örneğine enjekte edeceksiniz.
+        // Yeni bir ayrıntı denetleyicisi oluşturun ve bunu sabit bir view atayın.
+        let viewController = ReminderViewController(reminder: reminder)
+        // navigationController yığınına itin.
+        // Bir görünüm denetleyicisi halihazırda bir gezinme denetleyicisine katıştırılmışsa, gezinme denetleyicisine bir başvuru isteğe bağlı navigasyonController özelliğinde saklanır.
+        navigationController?.pushViewController(viewController, animated: true)
+    }
     
     private func listLayout() -> UICollectionViewCompositionalLayout {
            var listConfiguration = UICollectionLayoutListConfiguration(appearance: .grouped)
