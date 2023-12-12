@@ -9,8 +9,12 @@ import UIKit
 
 // Bu sınıf, hatırlatıcı ayrıntılarının listesini düzenler ve listeyi hatırlatıcı ayrıntıları verileriyle birlikte sağlar.
 class ReminderViewController: UICollectionViewController {
+    // Veri kaynakları geneldir. Int ve Row genel parametrelerini belirterek, derleyiciye, veri kaynağınızın bölüm numaraları için Int örneklerini ve liste satırları için önceki bölümde tanımladığınız özel numaralandırma olan Row örneklerini kullandığı talimatını verirsiniz.
+    private typealias DataSource = UICollectionViewDiffableDataSource<Int, Row>
     // Reminder görünümü denetleyicisi bu hatırlatıcının ayrıntılarını görüntüler. Bunu bir değişken haline getirirsiniz çünkü gelecekteki bir eğitimde hatırlatıcıyı düzenleme yeteneği eklersiniz.
     var reminder: Reminder
+    // dataSource adlı bir özellik ekleyin.
+    private var dataSource: DataSource!
     
     /* Not
      Derleyici, hatırlatıcı görünüm denetleyicisinin başlatıcısı olmadığı için bir hata oluşturur. Swift'te, sınıflar ve yapılar, bir örnek oluşturulduğunda
@@ -46,6 +50,49 @@ class ReminderViewController: UICollectionViewController {
      */
     required init?(coder: NSCoder) {
         fatalError("Always initialize ReminderViewController using init(reminder:)")
+    }
+    
+    /* Hücreyi koleksiyon görünümüne kaydetmek ve görünüm yüklendikten sonra veri kaynağını oluşturmak için görünüm denetleyicisinin yaşam döngüsüne müdahale
+     edeceksiniz.
+   
+     Override viewDidLoad.
+     
+     Bir görünüm denetleyicisinin yaşam döngüsü yöntemini geçersiz kıldığınızda, önce üst sınıfa özel görevlerinizden önce kendi görevlerini yerine getirme şansı 
+     verirsiniz. */
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Bu bölümde daha önce yaptığınız işleyiciyi kullanarak yeni bir hücre kaydı oluşturun ve sonucu bir sabit namedcellRegistration'a atayın.
+        let cellRegistration = UICollectionView.CellRegistration(handler: cellRegisterationHandler)
+        /*
+         Uygulamanızdaki listeler, ekrana sığabilecekten çok daha fazla öğeyi potansiyel olarak tutabilir. Gereksiz hücre oluşturmadan kaçınmak için sistem, 
+         ekrandan çıktıktan sonra geri dönüştürülecek bir toplama hücresi kuyruğu tutar.
+         
+         Yeniden kullanılabilir bir hücreyi kuyruğa alan yeni bir veri kaynağı oluşturun ve sonucu data atayın. */
+        dataSource = DataSource(collectionView: collectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: Row) in
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
+                                                                for: indexPath,
+                                                                item: itemIdentifier)
+        }
+    }
+    
+    // Bir hücreyi, dizin yolunu ve satırı kabul eden bir cellRegistrationHandler yöntemi oluşturun.
+    func cellRegisterationHandler(cell: UICollectionViewListCell, indexPath: IndexPath, row: Row) {
+        // Bu yapılandırma, satırlara varsayılan stili atar.
+        var contentConfiguration = cell.defaultContentConfiguration()
+        //Satır için uygun metin ve yazı tipini yapılandırın.
+        // text(for:) işlevini kullanarak verileri sağlayın ve önceki bölümde tanımladığınız satırların textStyle hesaplanan değişkenini kullanarak yazı tipi stilini sağlayın.
+        contentConfiguration.text = text(for: row)
+        contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: row.textStyle)
+        // Önceki bölümde tanımladığınız satırın görüntü hesaplanan değişkenini konfigürasyonun görüntü özelliğine atayın.
+        contentConfiguration.image = row.image
+        //Artık özelleştirmelerinizi varsayılan içeriğe ve yapılandırmanın stiline eklediğinize göre, özel yapılandırmayı koleksiyon görünümü hücresine uygulayın.
+        // Yapılandırmayı hücrenin contentConfiguration özelliğine atayın.
+        cell.contentConfiguration = contentConfiguration
+        // Hücrenin tintColor özelliğine .todayPrimaryTint değerini atayın
+        cell.tintColor = .todayPrimaryTint
+        
     }
     
     func text(for row: Row) -> String {
