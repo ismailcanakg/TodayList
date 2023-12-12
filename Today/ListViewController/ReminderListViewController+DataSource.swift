@@ -27,6 +27,17 @@ extension ReminderListViewController {
      */
     typealias DataSource = UICollectionViewDiffableDataSource<Int, Reminder.ID>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Reminder.ID>
+    /*
+     Daha sonra düğmeye bir erişilebilirlik Değeri ekleyeceksiniz. Her hatırlatıcının tamamlanma durumu için yerelleştirilmiş bir dize hesaplayarak başlayın.
+
+     reminderCompletedValue ve reminderNotCompletedValue adlı hesaplanan özellikleri ekleyin.*/
+    var reminderCompletedValue: String {
+        NSLocalizedString("Completed", comment: "Reminder completed value")
+    }
+    
+    var reminderNotCompletedValue: String {
+        NSLocalizedString("Not completed", comment: "Reminder not completed value")
+    }
     
     // updateSnapshot() adında bir yöntem oluşturun.
     func updateSnapshot(reloading ids: [Reminder.ID] = [])/*Kullanıcı arayüzünü güncellemek için, anlık görüntünün reloadItems(_:) yöntemini çağırarak kullanıcının hangi hatırlatıcıları değiştirdiğini anlık görüntüye söylemeniz gerekir.
@@ -85,7 +96,11 @@ extension ReminderListViewController {
         
         // Bitti düğmesi yapılandırmasının tintColor özelliğine .todayListCellDoneButtonTint değerini atayın.
         doneButtonConfiguration.tintColor = .todayListCellDoneButtonTint
-        
+        // Hücre kaydı işleyicisinde, hücrenin erişilebilirlikCustomActions dizisini özel eylemin bir örneğine ayarlayın.
+        cell.accessibilityCustomActions = [doneButtonAccessibilitiyAction(for: reminder)]
+        // Hücre kayıt işleyicisinde, hücrenin erişilebilirlik Değerine doğru yerelleştirilmiş dizeyi atayın.
+        cell.accessibilityValue =
+        reminder.isComplate ? reminderCompletedValue : reminderNotCompletedValue
         /*
          Deney
          Renkleri birkaç yolla oluşturabilirsiniz: kırmızı, yeşil ve mavi bileşenler sağlayarak; renk tonu, doygunluk ve parlaklık değerlerini sağlayarak; veya gri tonlamalı renkler için tek bir beyaz
@@ -154,7 +169,27 @@ extension ReminderListViewController {
         // ReminderListViewController+DataSource.swift'te,completeReminder(withId:) öğesinden updateSnapshot() öğesini çağırın.
         updateSnapshot(reloading: [id]/* completeReminder(withId:)'de, anlık görüntüyü güncellediğinizde hatırlatıcının tanımlayıcısını iletin. */)
     }
-    
+    /*
+     Bir hatırlatma için UIAccessibilityCustomAction oluşturan bir doneButtonAccessibilityAction(for:) yöntemi ekleyin.
+     Her hücre için özel bir eylem oluşturmak üzere hücre kayıt işleyicisinde bu yöntemi çağıracaksınız.*/
+    private func doneButtonAccessibilitiyAction(for reminder: Reminder) -> UIAccessibilityCustomAction {
+        /*
+         Create a name for the action using an NSLocalizedString.
+         VoiceOver, bir nesne için kullanılabilir eylemler olduğunda kullanıcıları uyarır. Bir kullanıcı seçenekleri duymaya karar verirse, VoiceOver her eylemin adını
+         okur.*/
+        let name = NSLocalizedString("Toggle completion",
+                                     comment: "Reminder done button accessibility label")
+        // Önceki adımda tanımladığınız adı kullanarak bir UIAccessibilityCustomAction oluşturun. ActionHandler kapanışında true değerini döndürün.
+        let action = UIAccessibilityCustomAction(name: name) { [weak self] /*Kapanış yakalama listesinde kendini zayıf bir şekilde yakalayın.
+Varsayılan olarak kapanışlar, içlerinde kullandığınız dış değerlere güçlü bir referans oluşturur. Görünüm denetleyicisine zayıf bir referansın belirtilmesi, tutma
+döngüsünü önler.*/ action in
+            // Kapanışta,completeReminder(withId:) öğesini çağırın.
+            self?.completeReminder(widthId: reminder.id)
+            return true
+        }
+        // yeni eylemi döndür
+        return action
+    }
     // Bir hatırlatıcıyı kabul eden ve bir CustomViewConfiguration döndüren, doneButtonConfiguration adında yeni bir işlev oluşturun.
     private func doneButtonConfiguration(for reminder: Reminder)
     -> UICellAccessory.CustomViewConfiguration
