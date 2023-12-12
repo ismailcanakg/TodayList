@@ -119,6 +119,22 @@ extension ReminderListViewController {
         reminders[index] = reminder
     }
     
+    /*
+     Ardından görünümün denetleyicisinde bir hatırlatıcıyı tamamlayan bir yöntem tanımlayacaksınız. Bu yöntem butona basıldığında çağırılacaktır.
+
+     ReminderListViewController+DataSource.swift'te, Reminder.ID'yi kabul eden bir CompleteReminder(withId:) yöntemi oluşturun.
+
+     Modelden bir hatırlatıcı almak için Reminder.ID'yi kullanacaksınız.
+     */
+    func completeReminder(widthId id: Reminder.ID) {
+        // Hatırlatıcıyı (withId :) çağırarak hatırlatıcıyı alın.
+        var reminder = reminder(withId: id)
+        // Hatırlatıcının isComplete özelliğini değiştirin.
+        reminder.isComplate.toggle()
+        // Modeldeki hatırlatıcıyı güncellemek için updateReminder(_:) öğesini çağırın.
+        updateReminder(reminder)
+    }
+    
     // Bir hatırlatıcıyı kabul eden ve bir CustomViewConfiguration döndüren, doneButtonConfiguration adında yeni bir işlev oluşturun.
     private func doneButtonConfiguration(for reminder: Reminder)
     -> UICellAccessory.CustomViewConfiguration
