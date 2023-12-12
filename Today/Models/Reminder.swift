@@ -53,13 +53,13 @@ extension [Reminder] {
 extension Reminder {
     static var sampleData = [
         Reminder(
-            title: "Sumbit reimbursement report",
+            title: "Günün her saati seni seviyorum",
             dueDate: Date().addingTimeInterval(800.0),
-            notes: "Don't forget about taxi receipts"),
+            notes: "Seni seviyorum demeyi unutma"),
         Reminder(
-            title: "Code rewiew",
+            title: "13.00- 13.30 yemek saati",
             dueDate: Date().addingTimeInterval(14000.0),
-            notes: "Check tech specs in shared folder", isComplate: true),
+            notes: "Yemek yemeyi unutma", isComplate: true),
         Reminder(
             title: "Pick up new contacts",
             dueDate: Date().addingTimeInterval(24000.0),
