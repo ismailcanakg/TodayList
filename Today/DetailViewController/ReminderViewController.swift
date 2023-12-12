@@ -68,7 +68,9 @@ class ReminderViewController: UICollectionViewController {
             return collectionView.dequeueConfiguredReusableCell(
                 using: cellRegistration, for: indexPath, item: itemIdentifier)
         }
-        
+        // iOS 16, gezinme çubuğunuzun davranışını ve içerik yoğunluğunu özelleştirmenize izin veren gezinme stillerini destekler.
+        // Uygulama iOS 16 veya sonraki sürümlerde çalıştığında gezinme çubuğunun stilini .navigator olarak ayarlayın.
+        //.navigator stili, başlığı yatay olarak ortaya yerleştirir ve sol tarafta bir geri düğmesi içerir.
         if #available(iOS 16, *) {
             navigationItem.style = .navigator
         }
