@@ -133,6 +133,7 @@ extension ReminderListViewController {
         reminder.isComplate.toggle()
         // Modeldeki hatırlatıcıyı güncellemek için updateReminder(_:) öğesini çağırın.
         updateReminder(reminder)
+        // ReminderController+Data.swift, kod satırında hatırlatıcıyı güncelleyen bir kesme noktası ayarlayın.
     }
     
     // Bir hatırlatıcıyı kabul eden ve bir CustomViewConfiguration döndüren, doneButtonConfiguration adında yeni bir işlev oluşturun.
@@ -163,8 +164,17 @@ extension ReminderListViewController {
         /* Yeni bir ayarlama uyumu ve sonucu sabit olarak adlandırılmış bir düğme ataması.
         
            Şimdilik düğme, hatırlatıcının tamamlanma durumunun görsel bir temsili görevi görüyor. Gelecekteki bir eğitimde, bu kontrole, tüm özelliğin durumunu değiştiren bir eylem ekleyeceksiniz.
+         
+           ReminderListViewController+DataSource.swift'te, yeni ReminderDoneButton sınıfınızı kullanmak için düğme atamasını değiştirin.
         */
-        let button = UIButton()
+        let button = ReminderDoneButton()
+        /*
+         addTarget(_:action:for:) öğesini çağırarak düğmenin .touchUpInside olayını didPressDoneButton(_:) eylem yöntemine bağlayın.
+
+         Derleme sırasında sistem, hedef ReminderListViewController'ın didPressDoneButton(_:) yöntemine sahip olup olmadığını kontrol eder.*/
+        button.addTarget(self, action: #selector(didPressDoneButton(_:)), for: .touchUpInside)
+        // Hatırlatıcının tanımlayıcısını düğmenin id özelliğine atayın.
+        button.id = reminder.id
         
         // Görüntüyü düğmenin normal durumuna atayın.
         // Bir UIButton nesnesini, normal durumdayken bir görüntüyü, vurgulandığında ise farklı bir görüntüyü görüntüleyecek şekilde yapılandırabilirsiniz.
