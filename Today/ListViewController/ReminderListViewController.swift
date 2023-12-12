@@ -98,6 +98,7 @@ class ReminderListViewController: UICollectionViewController {
              Her öğe için yeni bir hücre oluşturabilirsiniz, ancak başlatma maliyeti uygulamanızın performansını düşürür.
              Hücreleri yeniden kullanmak, uygulamanızın çok sayıda öğeyle bile iyi performans göstermesini sağlar.
              */
+            
              }
         
         // viewLoad() yeni bir anlık görüntü değişkeni oluşturun.
@@ -129,6 +130,9 @@ class ReminderListViewController: UICollectionViewController {
          Anlık görüntüyü uygulamak, kullanıcı arayüzündeki değişiklikleri yansıtır.
          */
         dataSource.apply(snapshot)
+        
+        // Reminder.swift viewLoad() yeni yöntemi çağırın.
+        updateSnapshot()
         
         // Veri kaynağını koleksiyon görünümüne atayın.
         collectionView.dataSource = dataSource

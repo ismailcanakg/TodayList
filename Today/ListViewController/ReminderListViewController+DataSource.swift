@@ -28,6 +28,23 @@ extension ReminderListViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Int, Reminder.ID>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Reminder.ID>
     
+    // updateSnapshot() adında bir yöntem oluşturun.
+    func updateSnapshot(reloading ids: [Reminder.ID] = [])/*Kullanıcı arayüzünü güncellemek için, anlık görüntünün reloadItems(_:) yöntemini çağırarak kullanıcının hangi hatırlatıcıları değiştirdiğini anlık görüntüye söylemeniz gerekir.
+                                                           
+        Güncellenecek bir dizi hatırlatıcı tanımlayıcıyı kabul etmek için updateSnapshot() işlevini değiştirin.
+                                                           
+        Parametrenin varsayılan değeri olarak boş bir dizi belirtmek, tanımlayıcıları sağlamadan viewDidLoad() yönteminden yöntemi çağırmanıza olanak tanır.*/
+    {
+        // Anlık görüntü kodunu, hatırlatıcı listesi görünümü denetleyicisinin viewDidLoad() yönteminden, önceki adımda oluşturduğunuz yönteme çıkarın.
+        var snapshot = Snapshot()
+        snapshot.appendSections([0])
+        snapshot.appendItems(reminders.map { $0.id })
+        // Dizi boş değilse, anlık görüntüye tanımlayıcılar için hatırlatıcıları yeniden yüklemesini söyleyin.
+        if !ids.isEmpty {
+            snapshot.reloadItems(ids)
+        }
+        dataSource.apply(snapshot)
+    }
     
     /*
      Listeler, birden fazla veri türü için görüntüleyebilir. İlk hücre türünüzü aşağıdaki koleksiyonunuzla kaydedeceksiniz.
@@ -134,6 +151,8 @@ extension ReminderListViewController {
         // Modeldeki hatırlatıcıyı güncellemek için updateReminder(_:) öğesini çağırın.
         updateReminder(reminder)
         // ReminderController+Data.swift, kod satırında hatırlatıcıyı güncelleyen bir kesme noktası ayarlayın.
+        // ReminderListViewController+DataSource.swift'te,completeReminder(withId:) öğesinden updateSnapshot() öğesini çağırın.
+        updateSnapshot(reloading: [id]/* completeReminder(withId:)'de, anlık görüntüyü güncellediğinizde hatırlatıcının tanımlayıcısını iletin. */)
     }
     
     // Bir hatırlatıcıyı kabul eden ve bir CustomViewConfiguration döndüren, doneButtonConfiguration adında yeni bir işlev oluşturun.
