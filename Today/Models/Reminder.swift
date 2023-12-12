@@ -7,12 +7,42 @@
 
 import Foundation
 
-struct Reminder {
+struct Reminder: Identifiable /* Reminder.swift'te, Tanımlanabilir protokole uygunluğu beyan edin. */ {
+    // UUID().uuidString varsayılan değerine sahip id adlı bir String özelliği ekleyin.
+    // Foundation'daki UUID yapısı evrensel olarak benzersiz değerler üretir.
+    var id: String = UUID().uuidString
     var title: String
     var dueDate: Date
     var notes: String? = nil
     var isComplate: Bool = false
 }
+
+// Reminder.swift, hatırlatıcı dizilerine bir kapsam ekler.
+// Ayrıca genel bir türü koşullu olarak genişletmek için bir Where cümleciği de kullanabilirsiniz; Array burada Element == Reminder uzantısı gibi.
+extension [Reminder] {
+    /*
+     Belirli bir hatırlatıcının dizinini döndüren bir işlev oluşturacaksınız.
+
+     Bir kimlik bağımsız değişkenini kabul eden ve Self.Index'i döndüren indexOfReminder adında bir işlev oluşturun.
+
+     Array.Index, Int için bir tür takma adıdır.
+     */
+    func indexOfReminder(withId id: Reminder.ID) -> Self.Index {
+  
+        /*
+         Not
+         Bir seçim dizin döndürmesi için derleyici bir hata oluşturur.
+
+         Tanımlayıcıyla eşleşen bir öğenin ilk dizinini, adlı bir sabite atayan bir koruma ifadesi yazın.
+         */
+        guard let index = firstIndex(where: {$0.id == id}) else {
+            fatalError()
+        }
+        // Eşleşen dizini döndür.
+        return index
+    }
+}
+
 
 #if DEBUG 
 /*

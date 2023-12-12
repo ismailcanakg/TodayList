@@ -9,11 +9,11 @@ import UIKit
 
 class ReminderListViewController: UICollectionViewController {
     
-//// Diffable veri kaynağı için bir tür takma adı ekleyin.
-//// Tür takma adları, daha anlamlı bir isme sahip mevcut bir türe atıfta bulunmak için yararlıdır.
+// Diffable veri kaynağı için bir tür takma adı ekleyin.
+//Tür takma adları, daha anlamlı bir isme sahip mevcut bir türe atıfta bulunmak için yararlıdır.
 //    typealias DataSource = UICollectionViewDiffableDataSource<Int, String>
 //    
-//// Diffable bir veri kaynağı anlık görüntüsü için bir tür takma adı ekleyin.
+// Diffable bir veri kaynağı anlık görüntüsü için bir tür takma adı ekleyin.
 //    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, String>
     
     // Bir DataSource'un paketini örtülü olarak açan bir dataSource özelliği ekleyin.
@@ -24,6 +24,11 @@ class ReminderListViewController: UICollectionViewController {
      */
     
     var dataSource: DataSource!
+    
+    // Daha sonra görünüm denetleyicisine yeni bir hatırlatıcı özelliği ekleyeceksiniz. Anlık görüntüleri ve koleksiyon görünümü hücrelerini yapılandırmak için bu özelliği kullanacaksınız.
+    // Bir dizi Hatırlatıcı örneğini depolayan bir hatırlatıcı özelliği ekleyin. Diziyi örnek verilerle başlatın.
+    var reminders: [Reminder] = Reminder.sampleData
+    
     // Ardından, koleksiyon görünümünü diffable veri kaynağı başlatıcısına geçirerek diffable veri kaynağını koleksiyon görünümüne bağlayacaksınız.
     
     override func viewDidLoad() {
@@ -70,7 +75,12 @@ class ReminderListViewController: UICollectionViewController {
         dataSource = DataSource(collectionView: collectionView) {
                  (collectionView: UICollectionView,
                   indexPath: IndexPath,
-                  itemIdentifier: String) in
+                  /* Veri kaynağının hücre sağlayıcısını, hatırlatıcıları tanımlamak için id özelliğini kullanacak şekilde yapılandıracaksınız.
+                   
+                   ReminderListViewController.swift'te, veri kaynağının başlatıcısındaki itemIdentifier türünü Reminder.ID olarak değiştirin.
+
+                   Reminder.ID, Tanımlanabilir protokolün ilişkili türüdür. Hatırlatıcı durumunda String için bir tür takma adıdır.*/
+                  itemIdentifier: Reminder.ID) in
             // Not
             // Derleyici, kapatma bir sonraki adımda bir hücre döndürene kadar bir hata üretir.
             
@@ -110,7 +120,9 @@ class ReminderListViewController: UICollectionViewController {
          Bu versiyonda, map(_:) yalnızca anlık görüntüde öğe olarak doldurulan hatırlatıcı başlıklarını içeren yeni bir
          dizi döndürür
          */
-        snapshot.appendItems(Reminder.sampleData.map { $0.title})
+        
+        // Anımsatıcılar dizisini kullanarak anlık görüntüyü yapılandırın. Tanımlayıcı dizisini oluşturmak için title yerine id özelliğine eşleyin.
+        snapshot.appendItems(Reminder.sampleData.map { $0.id})
         
         /*
          Anlık görüntüyü veri kaynağına uygulayın.

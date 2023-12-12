@@ -12,23 +12,37 @@ import UIKit
  
  Reminder bir uzantı oluşturun.
  Bu uzantı, Reminder'ın hatırlatıcı listesine bir veri kaynağı olarak hareket etmesini sağlayan tüm davranışları içerecektir.
+ 
+ 
  */
 
 extension ReminderListViewController {
     // Tür takma ad tanımlarınıReminderListViewController.swiftController+Data.swift taşıyın.
     // Bu türler, hatırlatıcı verileriniz için bölünebilir veri kaynağını ve anlık görüntüleri tanımlamanıza olanak tanır.
-    typealias DataSource = UICollectionViewDiffableDataSource<Int, String>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, String>
+    
+    /*
+     Sonraki iki düzeltme, görünüm uzantısındaki tanımlayıcı türlerini güncelleyeceksiniz.
+
+     ReminderListViewController+DataSource.swift'te, veri kaynağındaki ve anlık görüntü türü takma adlarındaki öğe tanımlayıcı türünü Reminder.ID olarak değiştirin.
+     */
+    typealias DataSource = UICollectionViewDiffableDataSource<Int, Reminder.ID>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Reminder.ID>
+    
     
     /*
      Listeler, birden fazla veri türü için görüntüleyebilir. İlk hücre türünüzü aşağıdaki koleksiyonunuzla kaydedeceksiniz.
 
      Hücre, dizin yolu ve kimliği kabul eden cellRegistrationHandler adlı bir yöntem oluşturun.
+     
+     CellRegistrationHandler parametre listesindeki tanımlayıcı türünü Reminder.ID olarak değiştirin.
      */
-    func cellRegistrationHandler(cell: UICollectionViewListCell, indexPath: IndexPath, id: String) {
+    func cellRegistrationHandler(cell:
+                                 UICollectionViewListCell, indexPath: IndexPath, id: Reminder.ID) {
         
         // Reminder.swift hücre kayıt kapanışından içeriği çıkarın ve bunları ReminderController+Data.swift yeni yönteminize ekleyin.
-        let reminder = Reminder.sampleData[indexPath.item]
+        // Hatırlatıcıyı örnek veriler yerine yeni hatırlatıcılar dizisinden alın.
+        // Sağlanan id hatırlatıcıyı almak için yeni yöntemi kullanmak üzere hücre kayıt işleyicisini güncelleyin.
+        let reminder = reminder(withId: id)
         var contentConfiguration = cell.defaultContentConfiguration()
         contentConfiguration.text = reminder.title
         
@@ -90,7 +104,19 @@ extension ReminderListViewController {
          UIKit uygulamalarında birçok sorumlulukları olduğundan, görünüm denetleyici dosyaları büyük olabilir. Görünüm denetleyicisi sorumluluklarını ayrı dosya ve uzantılar halinde yeniden düzenlemek,
          hataları bulmayı ve daha sonra yeni özellikler eklemeyi kolaylaştırır.
          */
-
+    }
+    // Daha sonra Array'e eklediğiniz indexOfReminder(withId:) yöntemini kullanan iki yöntem oluşturacaksınız. Hatırlatıcılara doğrudan erişmek yerine bu yöntemi kullanmak olası hataları azaltır ve kodunuzun bakımını kolaylaştırır.
+    
+    // ReminderController+Data.swift, bir hatırlatıcı tanımlayıcısını kabul eden ve hatırlatıcı dizisinden karşılık gelen hatırlatıcıyı döndüren bir yöntem oluşturun.
+    func reminder(withId id: Reminder.ID) -> Reminder {
+        let index = reminders.indexOfReminder(withId: id)
+        return reminders[index]
+    }
+    
+    // Bir hatırlatıcıyı kabul eden ve karşılık gelen dizi öğesini hatırlatıcının içeriğiyle güncelleyen updateReminder(_:) adında bir yöntem oluşturun.
+    func updateReminder(_ reminder: Reminder) {
+        let index = reminders.indexOfReminder(withId: reminder.id)
+        reminders[index] = reminder
     }
     
     // Bir hatırlatıcıyı kabul eden ve bir CustomViewConfiguration döndüren, doneButtonConfiguration adında yeni bir işlev oluşturun.
