@@ -77,11 +77,27 @@ class ReminderViewController: UICollectionViewController {
             navigationItem.style = .navigator
         }
         navigationItem.title = NSLocalizedString("Reminder", comment: "Reminder view controller title")
+        /* UIViewController'ın alt sınıfları, düzenleme moduna girip çıkmak için kullanacağınız bir editButtonItem özelliğine sahiptir.
+         viewDidLoad()'da, editButtonItem'i gezinme öğesinin rightBarButtonItem özelliğine atayın. */
+        // Bir Düzenle düğmesine dokunmak, başlığını otomatik olarak "Düzenle" ve "Bitti" arasında değiştirir.
+        navigationItem.rightBarButtonItem = editButtonItem
         
         // updateSnapshot()'ı Control tuşuna basarak tıklayın, Yeniden Düzenleme > Yeniden Adlandır'ı seçin ve işlevin adını updateSnapshotForViewing olarak değiştirin.
         // Xcode, bir derleyici hatasını önlemek için çağrı sitesindeki işlev adını günceller.
         updateSnapshotForVeiwing()
 
+    }
+    /* Kullanıcı Düzenle veya Bitti düğmesine dokunduğunda sistem setEditing(_:animated:) işlevini çağırır. Görünüm ve düzenleme modları için ReminderViewController'ı güncellemek amacıyla bu yöntemi geçersiz kılacaksınız.
+     
+     setEditing(_:animated:) öğesini geçersiz kılın ve üst sınıfın uygulamasını çağırın. */
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        // Görünüm düzenleme moduna geçiyorsa, updateSnapshotForEditing() öğesini çağırın. Aksi takdirde updateSnapshotForViewing()'i çağırın.
+        if editing {
+            updateSnapshotForEditing()
+        } else {
+            updateSnapshotForVeiwing()
+        }
     }
 
     // Bir hücreyi, dizin yolunu ve satırı kabul eden bir cellRegistrationHandler yöntemi oluşturun.
