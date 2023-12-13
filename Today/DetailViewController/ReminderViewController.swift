@@ -4,9 +4,11 @@ import UIKit
 
 class ReminderViewController: UICollectionViewController {
     // Veri kaynakları geneldir. Int ve Row genel parametrelerini belirterek, derleyiciye, veri kaynağınızın bölüm numaraları için Int örneklerini ve liste satırları için önceki bölümde tanımladığınız özel numaralandırma olan Row örneklerini kullandığı talimatını verirsiniz.
-    private typealias DataSource = UICollectionViewDiffableDataSource<Int, Row>
+    
+    // ReminderViewController.swift'te DataSource ve Snapshot takma adlarını Int yerine Bölüm kullanacak şekilde değiştirin. Section !!
+    private typealias DataSource = UICollectionViewDiffableDataSource<Section, Row>
     // Reminder görünümü denetleyicisi bu hatırlatıcının ayrıntılarını görüntüler. Bunu bir değişken haline getirirsiniz çünkü gelecekteki bir eğitimde hatırlatıcıyı düzenleme yeteneği eklersiniz.
-    private typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Row>
+    private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Row>
 
     var reminder: Reminder
     // dataSource adlı bir özellik ekleyin.
@@ -107,8 +109,23 @@ class ReminderViewController: UICollectionViewController {
 
     private func updateSnapshot() {
         var snapshot = Snapshot()
-        snapshot.appendSections([0])
-        snapshot.appendItems([Row.title, Row.date, Row.time, Row.notes], toSection: 0)
+        // Denetleyici görünüm modundaysa, bir anlık görüntüyü yapılandırmak için bu yöntemi kullanacaksınız. Bu eğitimin ilerleyen bölümlerinde, düzenleme modu için bir anlık görüntü yapılandırmak üzere başka bir işlev oluşturacaksınız. .view için
+        snapshot.appendSections([.view])
+        snapshot.appendItems([Row.title, Row.date, Row.time, Row.notes], toSection: .view)
         dataSource.apply(snapshot)
+    }
+    
+    // Bir dizin yolunu kabul eden ve bir Bölüm döndüren bir bölüm(for:) işlevi oluşturun.
+    private func section(for indexPath: IndexPath) -> Section {
+        // Bir bölüm numarası oluşturmak için dizin yolunu kullanın.
+        //Görünüm modunda, tüm öğeler bölüm 0'da görüntülenir. Düzenleme modunda başlık, tarih ve notlar sırasıyla 1, 2 ve 3. bölümlere ayrılır.
+        let sectionNumber = isEditing ? indexPath.section + 1 : indexPath.section
+        // Bölüm örneğini oluşturmak için bölüm numarasını kullanın.
+        // Ham değerle tanımlanan hızlı numaralandırmalar, sağlanan ham değer tanımlanan aralığın dışındaysa sıfır değerini döndüren başarısız bir başlatıcıya sahiptir.
+        guard let section = Section(rawValue: sectionNumber) else {
+            fatalError("Unable to find matching section")
+        }
+        return section
+        // Bölümü döndürmek derleyici hatasını düzeltir.
     }
 }

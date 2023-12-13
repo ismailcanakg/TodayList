@@ -26,7 +26,7 @@ class ReminderListViewController: UICollectionViewController {
     var dataSource: DataSource!
     
     // Daha sonra görünüm denetleyicisine yeni bir hatırlatıcı özelliği ekleyeceksiniz. Anlık görüntüleri ve koleksiyon görünümü hücrelerini yapılandırmak için bu özelliği kullanacaksınız.
-    // Bir dizi Hatırlatıcı örneğini depolayan bir hatırlatıcı özelliği ekleyin. Diziyi örnek verilerle başlatın.
+    // Bir dizi Reminder örneğini depolayan bir reminder özelliği ekleyin. Diziyi örnek verilerle başlatın.
     var reminders: [Reminder] = Reminder.sampleData
     
     // Ardından, koleksiyon görünümünü diffable veri kaynağı başlatıcısına geçirerek diffable veri kaynağını koleksiyon görünümüne bağlayacaksınız.
