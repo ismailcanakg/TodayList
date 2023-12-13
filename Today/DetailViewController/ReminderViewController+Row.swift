@@ -11,6 +11,10 @@ extension ReminderViewController {
     // Ayrıntı görünümünde dört ayrı hatırlatma detayı göstereceksiniz: başlık, tarih, saat ve notlar.
     //Daha sonra ayrıntı listesindeki öğeleri temsil etmek için Row örneklerini kullanacaksınız. UIKit listelerine veri ve stil sağlayan farklı veri kaynakları, öğelerin Hashable'a uygun olmasını gerektirir. Fark edilebilir veri kaynağı, anlık görüntüler arasında hangi öğelerin değiştiğini belirlemek için karma değerlerini kullanır.
     enum Row: Hashable {
+        // Her bölüm için başlık olarak kullanacağınız bir satır ekleyerek başlayın.
+        // ReminderViewController+Row.swift'te, ilişkili String değerine sahip bir başlık durumu ekleyin.
+        // İlişkili değer başlık başlığı olarak göstereceksiniz.
+        case header(String)
         case date
         case notes
         case time

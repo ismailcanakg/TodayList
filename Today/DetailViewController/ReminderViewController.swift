@@ -29,6 +29,16 @@ class ReminderViewController: UICollectionViewController {
         var listConfiguration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         // Liste hücreleri arasındaki satırları kaldırmak için liste yapılandırmasındaki ayırıcıları devre dışı bırakın.
         listConfiguration.showsSeparators = false
+        /*
+         Koleksiyon görünümleri varsayılan olarak bölüm başlıklarını içermez. Koleksiyon görünümünün yapılandırmasını başlıkları içerecek şekilde
+         güncelleyeceksiniz.
+         
+         başlatıcıda liste yapılandırmasının başlık modunu .firstItemInSection olarak değiştirin.
+         
+         Deney
+         Koleksiyon görünümlerinde başlıkları görüntülemenin diğer yollarını öğrenmek için UICollectionView'ı gözden geçirin.
+         */
+        listConfiguration.headerMode = .firstItemInSection
         // Sistemin öğeleri bir koleksiyon görünümünde nasıl düzenlediğini açıklamalısınız. UIKit, basit listeler, gruplandırılmış listeler ve ızgaralar gibi yaygın uygulamalar için mizanpajları tanımlayan kompozisyon düzeni sınıfları sağlar. Bir hatırlatıcının ayrıntılarını basit bir listede göstereceksiniz.
                 //Bir liste kompozisyon düzeni, yalnızca bir liste için gereken düzen bilgilerini içerir.
         let listLayout = UICollectionViewCompositionalLayout.list(using: listConfiguration)
@@ -108,6 +118,16 @@ class ReminderViewController: UICollectionViewController {
         // Hücreleri farklı bölüm ve satır birleşimlerine göre yapılandırmak için bir tanımlama grubu kullanarak bir switch ifadesi ekleyin. Switch ifadesi beklenmeyen bir satır veya bölümle eşleşmeye çalışırsa varsayılan durumda fatalError(_:file:line:) işlevini çağırın.
         // Bölüm ve satır değerlerini switch deyimi ile kullanabileceğiniz tek bir bileşik değerde gruplamak için bir demet kullanırsınız.
         switch (section, row) {
+            // CellRegistrationHandler(cell:indexPath:row) öğesinde, bir başlık satırıyla eşleşen bir durum ekleyin ve başlık satırının ilişkili String değerini title adlı bir sabitte saklayın.
+            // Bu durum her bölüm için başlığı yapılandırır.
+        case (_, .header(let title)):
+            // Not : Derleyici, bir sonraki adımda düzelteceğiniz bir hata oluşturur.
+            // Hücrenin varsayılan yapılandırmasını alın ve bir değişkende saklayın.
+            var contentConfiguration = cell.defaultContentConfiguration()
+            // İçerik yapılandırmasının metin özelliğine başlık atayın.
+            contentConfiguration.text = title
+            // Yeni yapılandırmayı hücrenin contentConfiguration özelliğine atayın.
+            cell.contentConfiguration = contentConfiguration
             // .view bölümündeki tüm satırlarla eşleşen bir durum ekleyin.
             // Alt çizgi karakteri (_), herhangi bir satır değeriyle eşleşen bir joker karakterdi
         case (.view, _):
@@ -137,6 +157,8 @@ class ReminderViewController: UICollectionViewController {
         case .notes: return reminder.notes
         case .time: return reminder.dueDate.formatted(date: .omitted, time: .shortened)
         case .title: return reminder.title
+        // ReminderViewController.swift'te, text(for:) dosyasına sıfır döndüren varsayılan bir büyük/küçük harf ekleyin.
+        default: return nil
         }
     }
     
@@ -145,6 +167,11 @@ class ReminderViewController: UICollectionViewController {
         var snapshot = Snapshot()
         // Snapshot .title, .date ve .notes bölümlerini ekleyin.
         snapshot.appendSections([.title, .date, .notes])
+        // updateSnapshotForEditing()'de her bölüme başlık öğeleri ekleyin.
+        //name özelliği, başlıkta görüntüleyeceğiniz her durum için yerel ayara duyarlı bir dize hesaplar.
+        snapshot.appendItems([.header(Section.title.name)], toSection: .title)
+        snapshot.appendItems([.header(Section.date.name)], toSection: .date)
+        snapshot.appendItems([.header(Section.notes.name)], toSection: .notes)
         // Snapshot'ı veri kaynağına uygulayın.
         dataSource.apply(snapshot)
     }
@@ -153,7 +180,10 @@ class ReminderViewController: UICollectionViewController {
         var snapshot = Snapshot()
         // Denetleyici görünüm modundaysa, bir anlık görüntüyü yapılandırmak için bu yöntemi kullanacaksınız. Bu eğitimin ilerleyen bölümlerinde, düzenleme modu için bir anlık görüntü yapılandırmak üzere başka bir işlev oluşturacaksınız. .view için
         snapshot.appendSections([.view])
-        snapshot.appendItems([Row.title, Row.date, Row.time, Row.notes], toSection: .view)
+        // Görünüm modunun tek bir bölümü olduğundan, bir başbilgiye ihtiyacı yoktur.
+        // updateSnapshotForViewing() işlevinde, anlık görüntü öğelerinin ilk öğesi olarak boş bir başlık öğesi ekleyin.
+        snapshot.appendItems(
+            [Row.header(""), Row.title, Row.date, Row.time, Row.notes], toSection: .view)
         dataSource.apply(snapshot)
     }
     
