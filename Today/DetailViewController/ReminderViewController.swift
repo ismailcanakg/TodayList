@@ -77,23 +77,40 @@ class ReminderViewController: UICollectionViewController {
             navigationItem.style = .navigator
         }
         navigationItem.title = NSLocalizedString("Reminder", comment: "Reminder view controller title")
+        
+        // updateSnapshot()'ı Control tuşuna basarak tıklayın, Yeniden Düzenleme > Yeniden Adlandır'ı seçin ve işlevin adını updateSnapshotForViewing olarak değiştirin.
+        // Xcode, bir derleyici hatasını önlemek için çağrı sitesindeki işlev adını günceller.
+        updateSnapshotForVeiwing()
 
-        updateSnapshot()
     }
 
     // Bir hücreyi, dizin yolunu ve satırı kabul eden bir cellRegistrationHandler yöntemi oluşturun.
     func cellRegistrationHandler(cell: UICollectionViewListCell, indexPath: IndexPath, row: Row) {
-        // Bu yapılandırma, satırlara varsayılan stili atar.
-        var contentConfiguration = cell.defaultContentConfiguration()
-        //Satır için uygun metin ve yazı tipini yapılandırın.
-        // text(for:) işlevini kullanarak verileri sağlayın ve önceki bölümde tanımladığınız satırların textStyle hesaplanan değişkenini kullanarak yazı tipi stilini sağlayın.
-        contentConfiguration.text = text(for: row)
-        contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: row.textStyle)
-        // Önceki bölümde tanımladığınız satırın görüntü hesaplanan değişkenini konfigürasyonun görüntü özelliğine atayın.
-        contentConfiguration.image = row.image
-        //Artık özelleştirmelerinizi varsayılan içeriğe ve yapılandırmanın stiline eklediğinize göre, özel yapılandırmayı koleksiyon görünümü hücresine uygulayın.
-        // Yapılandırmayı hücrenin contentConfiguration özelliğine atayın.
-        cell.contentConfiguration = contentConfiguration
+        // Ardından, görünüm ve düzenleme modlarını desteklemek için hücre yapılandırma kodunu yeniden düzenleyeceksiniz.
+        // CellRegistrationHandler'da, bölümü dizin yolundan almak için bölüm(for:) yöntemini kullanın.
+        let section = section(for: indexPath)
+        // Hücreleri farklı bölüm ve satır birleşimlerine göre yapılandırmak için bir tanımlama grubu kullanarak bir switch ifadesi ekleyin. Switch ifadesi beklenmeyen bir satır veya bölümle eşleşmeye çalışırsa varsayılan durumda fatalError(_:file:line:) işlevini çağırın.
+        // Bölüm ve satır değerlerini switch deyimi ile kullanabileceğiniz tek bir bileşik değerde gruplamak için bir demet kullanırsınız.
+        switch (section, row) {
+            // .view bölümündeki tüm satırlarla eşleşen bir durum ekleyin.
+            // Alt çizgi karakteri (_), herhangi bir satır değeriyle eşleşen bir joker karakterdi
+        case (.view, _):
+            // Renk tonu rengiyle ilgili satır dışında mevcut hücre yapılandırma kodunu .viewküçük harf gövdesine taşıyın.
+            // Bu yapılandırma, satırlara varsayılan stili atar.
+            var contentConfiguration = cell.defaultContentConfiguration()
+            //Satır için uygun metin ve yazı tipini yapılandırın.
+            // text(for:) işlevini kullanarak verileri sağlayın ve önceki bölümde tanımladığınız satırların textStyle hesaplanan değişkenini kullanarak yazı tipi stilini sağlayın.
+            contentConfiguration.text = text(for: row)
+            contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: row.textStyle)
+            // Önceki bölümde tanımladığınız satırın görüntü hesaplanan değişkenini konfigürasyonun görüntü özelliğine atayın.
+            contentConfiguration.image = row.image
+            //Artık özelleştirmelerinizi varsayılan içeriğe ve yapılandırmanın stiline eklediğinize göre, özel yapılandırmayı koleksiyon görünümü hücresine uygulayın.
+            // Yapılandırmayı hücrenin contentConfiguration özelliğine atayın.
+            cell.contentConfiguration = contentConfiguration
+        default:
+            fatalError("Unexpected combination of section and row")
+        }
+    
         // Hücrenin tintColor özelliğine .todayPrimaryTint değerini atayın
         cell.tintColor = .todayPrimaryTint
     }
@@ -106,8 +123,17 @@ class ReminderViewController: UICollectionViewController {
         case .title: return reminder.title
         }
     }
+    
+    // Snapshot, verilerin mevcut durumunu temsil eder. Düzenleme modu için anlık görüntüyü değiştirecek ve sonraki iki adımda uygulayacaksınız.
+    private func updateSnapshotForEditing() {
+        var snapshot = Snapshot()
+        // Snapshot .title, .date ve .notes bölümlerini ekleyin.
+        snapshot.appendSections([.title, .date, .notes])
+        // Snapshot'ı veri kaynağına uygulayın.
+        dataSource.apply(snapshot)
+    }
 
-    private func updateSnapshot() {
+    private func updateSnapshotForVeiwing() {
         var snapshot = Snapshot()
         // Denetleyici görünüm modundaysa, bir anlık görüntüyü yapılandırmak için bu yöntemi kullanacaksınız. Bu eğitimin ilerleyen bölümlerinde, düzenleme modu için bir anlık görüntü yapılandırmak üzere başka bir işlev oluşturacaksınız. .view için
         snapshot.appendSections([.view])
